@@ -1,13 +1,13 @@
-function [Y_sim, Y_hat, lambda, T, T_hat] = simulation(noise_list, sparsity_list, X, num_rpt, N_y)
+function [Y_sim, Y_hat, lambda, T, T_hat] = sparsity_simulation(noise_list, sparsity_list, X, num_rpt, N_y, GOF_true, RDD_true)
 % simulate with Monte Carlo approach
 
 
-C = {'k','b','r','g','y',[.5 .6 .7],[.8 .2 .6]}; % Cell array of colros.
+C = {'k','b','r','g','y', 'm'}; % Cell array of colros.
 ii = 1;
 [N_x, N_s] = size(X);
 figure;
 hold on;
-
+X = zscore(X);
 
 for sparsity = sparsity_list
     GOF_mean = []; GOF_std = [];
@@ -24,7 +24,7 @@ for sparsity = sparsity_list
 
             Y_sim = (1 - alp) * T * X / (norm(T) * norm(X)) + alp * E / norm(E);
 
-            X = zscore(X);
+
             Y_sim = zscore(Y_sim);
             [Y_hat,T_hat,lambda] = ridge_regression_cross_valid(Y_sim, X);
 
@@ -50,12 +50,23 @@ for sparsity = sparsity_list
 
     [sortedX, sortIndex] = sort(GOF_mean);
     sortedY = RDD_mean(sortIndex);
-    plot(GOF_mean, RDD_mean, 'color',C{ii},'marker','o');
+    plot(sortedX, sortedY, 'color',C{ii},'marker','o');
     ii = ii + 1;
 end
 
+plot(GOF_true, RDD_true, 's',...
+    'LineWidth',2,...
+    'MarkerSize',10,...
+    'MarkerEdgeColor','b',...
+    'MarkerFaceColor',[0.5,0.5,0.5]);
+txt = ['\leftarrow GOF = ', num2str(GOF_true) ', RDD = ', num2str(RDD_true)];
+text(GOF_true,RDD_true,txt);
+
 hold off;
-title('monte carlo simulation')
+title('Monte Carlo Simulation')
+% savefig('./output/wenjia.fig')
+% save('./output/wenjia.mat')
+
 
 function T = hlp_simulate_T(sparsity, N_y, N_x)
 % standard normal distribution, positions are randomly chosen
