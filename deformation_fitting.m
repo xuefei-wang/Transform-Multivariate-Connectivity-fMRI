@@ -3,7 +3,7 @@ function RDSV = deformation_fitting(sv,toplot)
 
 g = fittype('a*exp(b*x)');
 x = [1: length(sv)]'; y = sv;
-f0 = fit(x,y,g);
+f0 = fit(x,y,g,'Upper', [Inf,-0.000001]); % set the upper bound so that b is not zero
 
 if(toplot)
     figure();
