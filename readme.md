@@ -1,6 +1,8 @@
-There are three steps to this approach.
+Reproduce the method from this article: Analysing linear multivariate pattern transformations in neuroimaging data, **doi:** https://doi.org/10.1101/497180
 
 
+
+## Steps
 
 1. run step1, to calculate 'GOF', 'RDD', 'RDSV' respectively:
 
